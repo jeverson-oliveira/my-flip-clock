@@ -1,4 +1,4 @@
-@import url('https://fonts.cdnfonts.com/css/ds-digital');
+
 
 .menu {
   display: flex;
@@ -15,9 +15,13 @@
   z-index: 1000;
 }
 
-.menu button {
+.menu a {
   width: 120px;
   height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   background: linear-gradient(160deg, #232526 60%, #3a3a40 100%);
   color: #e0e6ff;
   font-family: 'DS-Digital', 'VT323', 'Orbitron', monospace;
@@ -32,9 +36,9 @@
   margin-bottom: 0;
 }
 
-.menu button.active,
-.menu button:focus,
-.menu button:hover {
+.menu a.active,
+.menu a:focus,
+.menu a:hover {
   background: #2d2f36;
   color: #fff;
   transform: translateY(-3px) scale(1.04);

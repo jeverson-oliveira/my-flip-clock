@@ -1,12 +1,10 @@
 <div class="clock-container pomodoro-timer" [ngClass]="state.mode">
-  
-
   <!-- Botões -->
   <div class="controls">
-    <button (click)="pomodoro.startPause()">
+    <button (click)="startPause()">
       {{ state.running ? '⏸️ Pausar' : '▶️ Iniciar' }}
     </button>
-    <button (click)="pomodoro.reset()">🔄 Resetar</button>
+    <button (click)="reset()">🔄 Resetar</button>
   </div>
 
   

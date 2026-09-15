@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export type PomodoroMode = 'focus' | 'shortBreak' | 'longBreak';
@@ -12,12 +12,12 @@ export interface PomodoroState {
 }
 
 @Injectable({ providedIn: 'root' })
-export class PomodoroService {
+export class PomodoroService implements OnDestroy {
   private readonly FOCUS_DURATION = 25 * 60;      // 25 minutos
   private readonly SHORT_BREAK = 5 * 60;          // 5 minutos
   private readonly LONG_BREAK = 20 * 60;          // 20 minutos
 
-  private intervalId?: number;
+  private intervalId?: ReturnType<typeof setInterval>;
 
   private stateSubject = new BehaviorSubject<PomodoroState>({
     mode: 'focus',
@@ -29,6 +29,14 @@ export class PomodoroService {
 
   state$ = this.stateSubject.asObservable();
 
+  get currentState(): PomodoroState {
+    return this.stateSubject.value;
+  }
+
+  ngOnDestroy(): void {
+    this.clearTimer();
+  }
+
   startPause(): void {
     const state = this.stateSubject.value;
 
@@ -37,7 +45,7 @@ export class PomodoroService {
       this.setState({ ...state, running: false });
     } else {
       this.setState({ ...state, running: true });
-      this.intervalId = window.setInterval(() => this.tick(), 10); // 10ms para centésimos
+      this.intervalId = setInterval(() => this.tick(), 10); // 10ms para centésimos
     }
   }
 
@@ -52,6 +60,12 @@ export class PomodoroService {
       milliseconds: 0,
       running: false
     });
+  }
+
+  skip(): void {
+    const state = this.stateSubject.value;
+    this.clearTimer();
+    this.completeCycle(state);
   }
 
   private tick(): void {
@@ -86,6 +100,8 @@ export class PomodoroService {
     if (state.mode === 'focus') {
       cycleCount++;
       nextMode = cycleCount % 4 === 0 ? 'longBreak' : 'shortBreak';
+    } else {
+      nextMode = 'focus';
     }
 
     const timeLeft = this.getDurationByMode(nextMode);
@@ -95,10 +111,8 @@ export class PomodoroService {
       timeLeft,
       milliseconds: 0,
       cycleCount,
-      running: true
+      running: false
     });
-
-    this.intervalId = window.setInterval(() => this.tick(), 10);
   }
 
   private getDurationByMode(mode: PomodoroMode): number {
@@ -114,7 +128,7 @@ export class PomodoroService {
   }
 
   private clearTimer(): void {
-    if (this.intervalId) {
+    if (this.intervalId !== undefined) {
       clearInterval(this.intervalId);
       this.intervalId = undefined;
     }

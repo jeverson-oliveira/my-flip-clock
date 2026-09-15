@@ -1,5 +1,5 @@
-<nav class="menu">
-  <button routerLink="/" routerLinkActive="active">🕒 Clock</button>
-  <button routerLink="/pomodoro" routerLinkActive="active">🍅 Pomodoro</button>
+<nav class="menu" aria-label="Navegação principal">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-label="Relógio">🕒 Clock</a>
+  <a routerLink="/pomodoro" routerLinkActive="active" aria-label="Pomodoro">🍅 Pomodoro</a>
 </nav>
 

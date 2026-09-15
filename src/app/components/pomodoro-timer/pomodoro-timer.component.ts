@@ -1,22 +1,24 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PomodoroService, PomodoroState } from '../../services/pomodoro.service';
 import { Subscription } from 'rxjs';
-import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-pomodoro-timer',
   standalone: true,
   imports: [CommonModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './pomodoro-timer.component.html',
   styleUrls: ['./pomodoro-timer.component.css']
 })
 export class PomodoroTimerComponent implements OnInit, OnDestroy {
-  state!: PomodoroState;
-  private sub!: Subscription;
+  state: PomodoroState;
+  private sub?: Subscription;
 
-  pomodoro = inject(PomodoroService);
+  private pomodoro = inject(PomodoroService);
+
+  constructor() {
+    this.state = this.pomodoro.currentState;
+  }
 
   ngOnInit(): void {
     this.sub = this.pomodoro.state$.subscribe(s => this.state = s);
@@ -28,16 +30,22 @@ export class PomodoroTimerComponent implements OnInit, OnDestroy {
   }
 
   get formattedTime(): string {
-  const total = this.state.timeLeft * 1000 + this.state.milliseconds; // exemplo, 150030 ms
-  const minutes = Math.floor(total / 60000).toString().padStart(2, '0');
-  const seconds = Math.floor((total % 60000) / 1000).toString().padStart(2, '0');
-  const centiseconds = Math.floor((total % 1000) / 10).toString().padStart(2, '0');
+    const total = this.state.timeLeft * 1000 + this.state.milliseconds;
+    const minutes = Math.floor(total / 60000).toString().padStart(2, '0');
+    const seconds = Math.floor((total % 60000) / 1000).toString().padStart(2, '0');
+    const centiseconds = Math.floor((total % 1000) / 10).toString().padStart(2, '0');
+    return `${minutes}:${seconds}:${centiseconds}`;
+  }
 
-  return `${minutes}:${seconds}:${centiseconds}`;
-}
+  startPause(): void {
+    this.pomodoro.startPause();
+  }
 
+  reset(): void {
+    this.pomodoro.reset();
+  }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }
