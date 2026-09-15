@@ -24,8 +24,11 @@ export class TaskService {
   add(title: string, subject?: string): void {
     const t = title.trim();
     if (!t) return;
+    const uid = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2, 11);
     const task: Task = {
-      id: crypto.randomUUID(),
+      id: uid,
       title: t,
       subject: subject?.trim() || undefined,
       done: false,

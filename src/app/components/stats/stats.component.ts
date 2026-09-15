@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PomodoroService } from '../../services/pomodoro.service';
 import { TaskService } from '../../services/task.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-stats',
@@ -10,16 +11,23 @@ import { TaskService } from '../../services/task.service';
   templateUrl: './stats.component.html',
   styleUrls: ['./stats.component.css']
 })
-export class StatsComponent implements OnInit {
+export class StatsComponent implements OnInit, OnDestroy {
   pomodoro = inject(PomodoroService);
   tasks = inject(TaskService);
 
   pomodoroState = this.pomodoro.currentState;
   taskList: import('../../services/task.service').Task[] = [];
+  private subs: Subscription[] = [];
 
   ngOnInit(): void {
-    this.pomodoro.state$.subscribe(s => this.pomodoroState = s);
-    this.tasks.tasks$.subscribe(t => this.taskList = t);
+    this.subs.push(
+      this.pomodoro.state$.subscribe(s => this.pomodoroState = s),
+      this.tasks.tasks$.subscribe(t => this.taskList = t)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   get focusHours(): string {
