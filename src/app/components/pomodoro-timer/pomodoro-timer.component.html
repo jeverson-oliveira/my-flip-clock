@@ -1,42 +1,43 @@
-<div class="clock-container pomodoro-timer" [ngClass]="state.mode">
+<div class="clock-container pomodoro-timer" [ngClass]="state.mode" role="timer" [attr.aria-label]="label + ' ' + formattedTime">
   <!-- Botões -->
   <div class="controls">
-    <button (click)="startPause()">
+    <button (click)="startPause()" [attr.aria-label]="state.running ? 'Pausar pomodoro' : 'Iniciar pomodoro'">
       {{ state.running ? '⏸️ Pausar' : '▶️ Iniciar' }}
     </button>
-    <button (click)="reset()">🔄 Resetar</button>
+    <button (click)="reset()" aria-label="Resetar pomodoro">🔄 Resetar</button>
   </div>
 
   
 
-  <div class="pomodoro-flip-container">
+  <div class="pomodoro-flip-container" aria-live="polite" aria-atomic="true">
   <div class="pomodoro-flip-section">
     <!-- Minutos -->
     <div class="pomodoro-flip-unit" *ngFor="let char of [formattedTime[0], formattedTime[1]]">
       <div class="pomodoro-flip-card">
-        <div class="pomodoro-flip-card-front">{{ char }}</div>
+        <div class="pomodoro-flip-card-front" aria-hidden="true">{{ char }}</div>
       </div>
     </div>
 
     <!-- Separador -->
-    <div class="pomodoro-flip-separator">:</div>
+    <div class="pomodoro-flip-separator" aria-hidden="true">:</div>
 
     <!-- Segundos -->
     <div class="pomodoro-flip-unit" *ngFor="let char of [formattedTime[3], formattedTime[4]]">
       <div class="pomodoro-flip-card">
-        <div class="pomodoro-flip-card-front">{{ char }}</div>
+        <div class="pomodoro-flip-card-front" aria-hidden="true">{{ char }}</div>
       </div>
     </div>
 
     <!-- Separador -->
-    <div class="pomodoro-flip-separator small-separator">:</div>
+    <div class="pomodoro-flip-separator small-separator" aria-hidden="true">:</div>
 
     <!-- Centésimos -->
     <div class="pomodoro-flip-unit small seconds-inline" *ngFor="let char of [formattedTime[6], formattedTime[7]]">
       <div class="pomodoro-flip-card">
-        <div class="pomodoro-flip-card-front">{{ char }}</div>
+        <div class="pomodoro-flip-card-front" aria-hidden="true">{{ char }}</div>
       </div>
     </div>
+    <span class="sr-only">{{ formattedTime }}</span>
   </div>
   </div>
   <div class="pomodoro-info">

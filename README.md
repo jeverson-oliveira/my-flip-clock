@@ -1,27 +1,42 @@
-# FlipClock
+# FlipClock — Angular 20
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
+Relógio flip + Pomodoro Timer com Angular 20 (standalone components, lazy routes, application builder).
 
-## Development server
+## Funcionalidades
+- **Flip Clock** (`/`): horas/minutos/segundos em cards flip, atualização a cada 1s (`flip-clock.component.ts:11`)
+- **Pomodoro** (`/pomodoro`): 25/5/20 min, ciclos 4×, centésimos, `PomodoroService` com `BehaviorSubject` (`pomodoro.service.ts:14`)
+- **Menu** lateral fixo com navegação acessível (`menu.component.html:1`)
+- Build para GitHub Pages (`docs/` ignorado no git, deploy via `gh-pages`)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Stack
+Angular 20.3 + TypeScript 5.9 + zone.js 0.15 + RxJS 7.8 — builder `application` (`angular.json:14`), output `docs/` com `.nojekyll` e `404.html` para SPA.
 
-## Code scaffolding
+## Scripts
+```bash
+npm install
+npm start          # ng serve http://localhost:4200
+npm run build      # ng build → docs/ (application builder, lazy chunks)
+npm run lint       # ng lint (angular-eslint 20)
+npm test           # ng test (Karma)
+npm run deploy     # build --base-href /my-flip-clock/ + gh-pages
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Estrutura
+```
+src/app/components/flip-clock/   # relógio
+src/app/components/pomodoro-timer/ # pomodoro + flip cards
+src/app/components/menu/         # navegação
+src/app/services/pomodoro.service.ts
+src/app/app.routes.ts            # lazy loadComponent
+```
 
-## Build
+## Git
+`/.gitignore` ignora `/docs`, `/.angular`, `/node_modules`, `*.log`, `.env` — `docs/` é artefato de build, versionado apenas via `gh-pages`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Snap
+`snapcraft.yaml` usa `base: core24`, `plugin: dump`, `source: docs` (válido YAML sem duplicate `parts`).
+```bash
+snapcraft pack
+snap install flip-clock_1.0.0_amd64.snap
+flip-clock  # xdg-open /usr/share/flip-clock/index.html
+```

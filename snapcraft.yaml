@@ -1,9 +1,10 @@
 name: flip-clock
-base: core18
+base: core24
 version: '1.0.0'
 summary: Flip Clock
 description: |
-  Este é um aplicativo Angular empacotado como um Snap.
+  Flip Clock e Pomodoro Timer em Angular 20 — relógio flip com animação e timer pomodoro.
+  Build com Angular application builder, output em docs/.
 
 grade: stable
 confinement: strict
@@ -11,20 +12,20 @@ confinement: strict
 parts:
   flip-clock:
     plugin: dump
-    source: dist/flip-clock
+    source: docs
     organize:
       '*': usr/share/flip-clock/
-
-apps:
-  flip-clock:
-    command: bin/launch-flip-clock
-    plugs:
-      - network
-      - network-bind
-
-parts:
   launch-flip-clock:
     plugin: dump
     source: .
     organize:
       launch-flip-clock.sh: bin/launch-flip-clock
+
+apps:
+  flip-clock:
+    command: bin/launch-flip-clock
+    plugs:
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
