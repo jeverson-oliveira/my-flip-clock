@@ -14,14 +14,25 @@
   color: #6f42c1;
 }
 
+.pomodoro-timer {
+  gap: 24px;
+}
+
 .pomodoro-timer .controls {
-  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0;
+  width: 100%;
 }
 
 .pomodoro-timer .controls button {
-  margin: 0 8px;
-  padding: 10px 20px;
-  font-size: 2rem;
+  flex: 0 1 auto;
+  min-width: 160px;
+  padding: 12px 24px;
+  font-size: 1.6rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -29,6 +40,10 @@
   color: #fff;
   font-family: 'DS-Digital', 'VT323', 'Orbitron', monospace;
   transition: background 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .pomodoro-timer .controls button:hover {
@@ -43,13 +58,15 @@
   min-height: 90vh;
   width: 100%;
   margin-left: 1px; /* espaço para o menu lateral */
+  gap: 24px;
+  padding: 24px 0;
 }
 
 .pomodoro-flip-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 80px 0 15px 0;
+  margin: 0;
 }
 
 .pomodoro-flip-section {

@@ -1,14 +1,4 @@
 <div class="clock-container pomodoro-timer" [ngClass]="state.mode" role="timer" [attr.aria-label]="label + ' ' + formattedTime">
-  <!-- Botões -->
-  <div class="controls">
-    <button (click)="startPause()" [attr.aria-label]="state.running ? 'Pausar pomodoro' : 'Iniciar pomodoro'">
-      {{ state.running ? '⏸️ Pausar' : '▶️ Iniciar' }}
-    </button>
-    <button (click)="reset()" aria-label="Resetar pomodoro">🔄 Resetar</button>
-  </div>
-
-  
-
   <div class="pomodoro-flip-container" aria-live="polite" aria-atomic="true">
   <div class="pomodoro-flip-section">
     <!-- Minutos -->
@@ -40,6 +30,15 @@
     <span class="sr-only">{{ formattedTime }}</span>
   </div>
   </div>
+
+  <!-- Botões -->
+  <div class="controls">
+    <button (click)="startPause()" [attr.aria-label]="state.running ? 'Pausar pomodoro' : 'Iniciar pomodoro'">
+      {{ state.running ? '⏸️ Pausar' : '▶️ Iniciar' }}
+    </button>
+    <button (click)="reset()" aria-label="Resetar pomodoro">🔄 Resetar</button>
+  </div>
+
   <div class="pomodoro-info">
     <h2>{{ label }}</h2>
 
