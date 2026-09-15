@@ -16,16 +16,21 @@
 }
 
 .menu a {
-  width: 120px;
+  width: 128px;
   height: 60px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  padding: 0 10px;
   text-decoration: none;
   background: linear-gradient(160deg, #232526 60%, #3a3a40 100%);
   color: #e0e6ff;
   font-family: 'DS-Digital', 'VT323', 'Orbitron', monospace;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
   border: 3px solid #fcfcfc;
   border-radius: 18px;
   box-shadow: 0 6px 18px #0008, 0 2px 0 #fff;
@@ -34,6 +39,7 @@
   transition: transform 0.1s, box-shadow 0.2s, background 0.2s;
   outline: none;
   margin-bottom: 0;
+  box-sizing: border-box;
 }
 
 .menu a.active,
