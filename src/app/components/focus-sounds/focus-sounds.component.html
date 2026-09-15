@@ -1,0 +1,26 @@
+<div class="focus-container">
+  <h1 class="focus-title">🎧 Sons para Foco</h1>
+  <p class="focus-sub">Escolha um som ambiente — combine com o Pomodoro para imersão.</p>
+
+  <div class="sound-grid">
+    <button
+      *ngFor="let s of sounds"
+      class="sound-card"
+      [class.active]="currentId===s.id"
+      (click)="play(s.id)"
+      [attr.aria-label]="'Tocar ' + s.label"
+    >
+      <span class="sound-emoji">{{ s.emoji }}</span>
+      <span class="sound-label">{{ s.label }}</span>
+      <span class="sound-state">{{ currentId===s.id ? '⏸️ Tocando' : '▶️ Tocar' }}</span>
+    </button>
+  </div>
+
+  <div class="volume-row" *ngIf="currentId">
+    <label for="vol">Volume</label>
+    <input id="vol" type="range" min="0" max="1" step="0.05" [value]="volume" (input)="onVolume($any($event.target).value)" />
+    <button class="btn-stop" (click)="stop()" aria-label="Parar som">⏹️ Parar</button>
+  </div>
+
+  <p class="focus-tip">Dica: deixe tocando em loop durante o ciclo de foco e pause nas pausas.</p>
+</div>

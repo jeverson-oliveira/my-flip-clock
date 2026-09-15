@@ -1,0 +1,72 @@
+.focus-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 32px 140px;
+  color: #e0e6ff;
+  font-family: 'DS-Digital', 'VT323', 'Orbitron', monospace;
+  text-align: center;
+}
+
+.focus-title { font-size: 2rem; color: #fff; margin-bottom: 8px; }
+.focus-sub { color: #aab; margin-bottom: 24px; }
+
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sound-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  border-radius: 16px;
+  border: 3px solid #fcfcfc;
+  background: linear-gradient(160deg, #232526 60%, #3a3a40 100%);
+  color: #e0e6ff;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 18px #0008;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.sound-card:hover,
+.sound-card.active {
+  background: #2d2f36;
+  transform: translateY(-2px);
+  border-color: #fff;
+}
+
+.sound-emoji { font-size: 2.2rem; }
+.sound-label { font-size: 1.1rem; color: #fff; }
+.sound-state { font-size: 0.85rem; color: #aab; }
+
+.volume-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.volume-row input { width: 200px; accent-color: #28a745; }
+
+.btn-stop {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 2px solid #fcfcfc;
+  background: #dc3545;
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.focus-tip { color: #aab; font-size: 0.9rem; margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .focus-container { padding-left: 16px; padding-top: 80px; }
+}

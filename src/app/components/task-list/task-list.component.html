@@ -1,0 +1,46 @@
+<div class="task-container">
+  <h1 class="task-title">📚 Tarefas de Estudo</h1>
+
+  <div class="task-form">
+    <input
+      [(ngModel)]="newTitle"
+      (keyup.enter)="add()"
+      placeholder="Nova tarefa — ex: Revisar capítulo 3"
+      aria-label="Nova tarefa"
+      class="task-input"
+    />
+    <input
+      [(ngModel)]="newSubject"
+      (keyup.enter)="add()"
+      placeholder="Matéria (opcional)"
+      aria-label="Matéria"
+      class="task-input small"
+    />
+    <button (click)="add()" class="btn-add" aria-label="Adicionar tarefa">＋ Adicionar</button>
+  </div>
+
+  <div class="task-filters" role="group" aria-label="Filtros">
+    <button [class.active]="filter==='all'" (click)="filter='all'">Todas</button>
+    <button [class.active]="filter==='open'" (click)="filter='open'">Pendentes</button>
+    <button [class.active]="filter==='done'" (click)="filter='done'">Concluídas</button>
+    <button class="btn-clear" (click)="clearDone()">Limpar concluídas</button>
+  </div>
+
+  <ul class="task-list" *ngIf="tasks$ | async as tasks">
+    <ng-container *ngFor="let t of tasks">
+      <li *ngIf="filter==='all' || (filter==='open' && !t.done) || (filter==='done' && t.done)"
+          class="task-item" [class.done]="t.done">
+        <label class="task-check">
+          <input type="checkbox" [checked]="t.done" (change)="toggle(t.id)" aria-label="Concluir tarefa" />
+          <span class="checkmark"></span>
+        </label>
+        <div class="task-content">
+          <span class="task-text">{{ t.title }}</span>
+          <span class="task-subject" *ngIf="t.subject">{{ t.subject }}</span>
+        </div>
+        <button class="btn-remove" (click)="remove(t.id)" aria-label="Remover tarefa">✕</button>
+      </li>
+    </ng-container>
+    <li *ngIf="tasks.length===0" class="task-empty">Nenhuma tarefa — adicione acima ✨</li>
+  </ul>
+</div>
