@@ -36,6 +36,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/my-flip-clock/",
               "budgets": [
                 {
                   "type": "initial",

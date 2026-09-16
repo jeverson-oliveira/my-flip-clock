@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --configuration production --base-href /my-flip-clock/ && npx angular-cli-ghpages --dir=docs",
+    "deploy": "ng build --configuration production && cp docs/index.html docs/404.html && touch docs/.nojekyll && npx angular-cli-ghpages --dir=docs",
     "lint": "ng lint"
   },
   "private": true,
