@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PomodoroService, PomodoroState } from '../../services/pomodoro.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pomodoro-timer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './pomodoro-timer.component.html',
   styleUrls: ['./pomodoro-timer.component.css']
 })
@@ -16,8 +17,17 @@ export class PomodoroTimerComponent implements OnInit, OnDestroy {
 
   private pomodoro = inject(PomodoroService);
 
+  focusMin = 25;
+  shortMin = 5;
+  longMin = 20;
+  showSettings = false;
+
   constructor() {
     this.state = this.pomodoro.currentState;
+    const cfg = this.pomodoro.getConfig();
+    this.focusMin = Math.round(cfg.focus / 60);
+    this.shortMin = Math.round(cfg.shortBreak / 60);
+    this.longMin = Math.round(cfg.longBreak / 60);
   }
 
   ngOnInit(): void {
@@ -43,6 +53,23 @@ export class PomodoroTimerComponent implements OnInit, OnDestroy {
 
   reset(): void {
     this.pomodoro.reset();
+  }
+
+  switchMode(mode: PomodoroState['mode']): void {
+    this.pomodoro.switchMode(mode);
+  }
+
+  saveSettings(): void {
+    this.pomodoro.setConfig({
+      focus: this.focusMin * 60,
+      shortBreak: this.shortMin * 60,
+      longBreak: this.longMin * 60
+    });
+    this.showSettings = false;
+  }
+
+  enableNotifications(): void {
+    void this.pomodoro.requestNotificationPermission();
   }
 
   ngOnDestroy(): void {

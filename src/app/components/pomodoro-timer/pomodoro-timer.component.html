@@ -32,11 +32,26 @@
   </div>
 
   <!-- Botões -->
+  <div class="mode-switch" role="group" aria-label="Modo">
+    <button [class.active]="state.mode==='focus'" (click)="switchMode('focus')">Foco</button>
+    <button [class.active]="state.mode==='shortBreak'" (click)="switchMode('shortBreak')">Curta</button>
+    <button [class.active]="state.mode==='longBreak'" (click)="switchMode('longBreak')">Longa</button>
+  </div>
+
   <div class="controls">
     <button (click)="startPause()" [attr.aria-label]="state.running ? 'Pausar pomodoro' : 'Iniciar pomodoro'">
       {{ state.running ? '⏸️ Pausar' : '▶️ Iniciar' }}
     </button>
     <button (click)="reset()" aria-label="Resetar pomodoro">🔄 Resetar</button>
+    <button (click)="showSettings = !showSettings" aria-label="Configurar">⚙️</button>
+    <button (click)="enableNotifications()" aria-label="Ativar notificações">🔔</button>
+  </div>
+
+  <div class="settings" *ngIf="showSettings">
+    <label>Foco (min) <input type="number" [(ngModel)]="focusMin" min="1" max="120" /></label>
+    <label>Curta (min) <input type="number" [(ngModel)]="shortMin" min="1" max="60" /></label>
+    <label>Longa (min) <input type="number" [(ngModel)]="longMin" min="1" max="60" /></label>
+    <button (click)="saveSettings()">Salvar</button>
   </div>
 
   <div class="pomodoro-info">

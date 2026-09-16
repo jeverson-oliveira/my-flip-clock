@@ -79,4 +79,22 @@ describe('PomodoroTimerComponent', () => {
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('should switch mode and save settings', () => {
+    const spySwitch = spyOn(service, 'switchMode');
+    component.switchMode('shortBreak');
+    expect(spySwitch).toHaveBeenCalledWith('shortBreak');
+    component.focusMin = 30;
+    component.shortMin = 10;
+    component.longMin = 30;
+    component.saveSettings();
+    expect(service.getConfig().focus).toBe(1800);
+    expect(component.showSettings).toBeFalse();
+  });
+
+  it('should request notifications', () => {
+    const spy = spyOn(service, 'requestNotificationPermission');
+    component.enableNotifications();
+    expect(spy).toHaveBeenCalled();
+  });
 });

@@ -31,8 +31,30 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   get focusHours(): string {
-    const minutes = this.pomodoroState.cycleCount * 25;
-    return (minutes / 60).toFixed(1);
+    return (this.totalMinutesAllTime() / 60).toFixed(1);
+  }
+
+  get todayMinutes(): number {
+    try {
+      const raw = localStorage.getItem('flipclock_focus_history');
+      if (!raw) return 0;
+      const hist = JSON.parse(raw) as Record<string, number>;
+      return hist[new Date().toISOString().slice(0, 10)] ?? 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  private totalMinutesAllTime(): number {
+    try {
+      const raw = localStorage.getItem('flipclock_focus_history');
+      if (!raw) return this.pomodoroState.cycleCount * Math.round(this.pomodoro.getConfig().focus / 60);
+      const hist = JSON.parse(raw) as Record<string, number>;
+      const sum = Object.values(hist).reduce((a, b) => a + b, 0);
+      return sum > 0 ? sum : this.pomodoroState.cycleCount * Math.round(this.pomodoro.getConfig().focus / 60);
+    } catch {
+      return 0;
+    }
   }
 
   get doneCount(): number {

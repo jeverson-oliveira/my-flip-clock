@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatsComponent } from './stats.component';
 import { TaskService } from '../../services/task.service';
-import { PomodoroService, PomodoroState } from '../../services/pomodoro.service';
+import { PomodoroState } from '../../services/pomodoro.service';
 
 describe('StatsComponent', () => {
   let component: StatsComponent;
@@ -56,5 +56,18 @@ describe('StatsComponent', () => {
   it('should render stats', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.stats-grid')).toBeTruthy();
+  });
+
+  it('should compute todayMinutes and total with history', () => {
+    localStorage.setItem('flipclock_focus_history', JSON.stringify({ [new Date().toISOString().slice(0, 10)]: 50 }));
+    fixture.detectChanges();
+    expect(component.todayMinutes).toBe(50);
+    expect(component.focusHours).toBe((50 / 60).toFixed(1));
+  });
+
+  it('should handle empty history fallback', () => {
+    localStorage.removeItem('flipclock_focus_history');
+    (component as unknown as { pomodoroState: PomodoroState }).pomodoroState = { cycleCount: 2, mode: 'focus', timeLeft: 0, milliseconds: 0, running: false } as PomodoroState;
+    expect(component.todayMinutes).toBe(0);
   });
 });
