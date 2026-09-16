@@ -171,8 +171,31 @@ describe('PomodoroService', () => {
   });
 
   it('should request notification permission', async () => {
+    const orig = (window as unknown as { Notification: unknown }).Notification;
+    (window as unknown as { Notification: { permission: string; requestPermission: () => Promise<string> } }).Notification = {
+      permission: 'granted',
+      requestPermission: () => Promise.resolve('granted')
+    };
     const result = await service.requestNotificationPermission();
-    expect(typeof result).toBe('boolean');
+    expect(result).toBeTrue();
+    (window as unknown as { Notification: unknown }).Notification = orig;
+  });
+
+  it('should return false when Notification undefined', async () => {
+    const orig = (window as unknown as { Notification: unknown }).Notification;
+    (window as unknown as { Notification: unknown }).Notification = undefined;
+    expect(await service.requestNotificationPermission()).toBeFalse();
+    (window as unknown as { Notification: unknown }).Notification = orig;
+  });
+
+  it('should request permission when default', async () => {
+    const orig = (window as unknown as { Notification: unknown }).Notification;
+    (window as unknown as { Notification: { permission: string; requestPermission: () => Promise<string> } }).Notification = {
+      permission: 'default',
+      requestPermission: () => Promise.resolve('denied')
+    };
+    expect(await service.requestNotificationPermission()).toBeFalse();
+    (window as unknown as { Notification: unknown }).Notification = orig;
   });
 
   it('should record focus history', fakeAsync(() => {
