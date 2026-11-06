@@ -51,3 +51,31 @@
   box-shadow: 0 12px 32px #000a, 0 2px 0 #fff;
   border-color: #fff;
 }
+
+/* Telas estreitas (celular e popup da extensão): barra horizontal no topo. */
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: row;
+    gap: 4px;
+    justify-content: flex-start;
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding: 8px;
+    background: #0c0c0c;
+    overflow-x: auto;
+  }
+
+  .menu a {
+    width: auto;
+    height: 34px;
+    padding: 0 8px;
+    font-size: 0.75rem;
+    border-width: 2px;
+    border-radius: 12px;
+    gap: 4px;
+  }
+}

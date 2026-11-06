@@ -4,11 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:widget": "ng serve --configuration widget --port 4300",
     "build": "ng build",
+    "build:web": "ng build --configuration production",
+    "build:extension": "ng build --configuration extension",
+    "build:widget": "ng build --configuration widget",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "ng build --configuration production && cp docs/index.html docs/404.html && touch docs/.nojekyll && npx angular-cli-ghpages --dir=docs",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "tauri": "tauri"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +34,7 @@
     "@angular-devkit/build-angular": "^20.3.37",
     "@angular/cli": "^20.3.37",
     "@angular/compiler-cli": "^20.3.31",
+    "@tauri-apps/cli": "^2.12.4",
     "@types/jasmine": "~5.1.0",
     "angular-cli-ghpages": "^3.1.0",
     "angular-eslint": "20.1.1",

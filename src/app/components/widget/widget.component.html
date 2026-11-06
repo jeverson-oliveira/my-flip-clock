@@ -1,0 +1,28 @@
+<div class="widget" [ngClass]="state.mode" role="timer" [attr.aria-label]="clock + ' — ' + modeLabel + ' ' + pomodoroTime">
+  <header class="widget-bar" data-tauri-drag-region>
+    <span class="status-dot" aria-hidden="true"></span>
+    <span class="mode-label" data-tauri-drag-region>{{ modeLabel }}</span>
+    <button class="icon-btn close" type="button" (click)="hide()" aria-label="Ocultar widget">✕</button>
+  </header>
+
+  <div class="widget-clock" data-tauri-drag-region aria-hidden="true">{{ clock }}</div>
+  <div class="widget-date">{{ date }}</div>
+
+  <div class="widget-pomodoro">
+    <span class="pomo-time">{{ pomodoroTime }}</span>
+
+    <button class="icon-btn" type="button" (click)="toggle()"
+            [attr.aria-label]="state.running ? 'Pausar pomodoro' : 'Iniciar pomodoro'">
+      {{ state.running ? '⏸' : '▶' }}
+    </button>
+    <button class="icon-btn" type="button" (click)="reset()" aria-label="Resetar pomodoro">↺</button>
+
+    <span class="cycles" [attr.aria-label]="state.cycleCount + ' pomodoros concluídos'">
+      <span class="cycle" *ngFor="let i of cycles" [class.done]="i < state.cycleCount % 4">🍅</span>
+    </span>
+  </div>
+
+  <div class="progress" aria-hidden="true">
+    <span [style.width.%]="progress"></span>
+  </div>
+</div>

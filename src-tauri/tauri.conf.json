@@ -1,0 +1,51 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "FlipClock",
+  "version": "1.0.0",
+  "identifier": "io.github.jeversonoliveira.flipclock",
+  "build": {
+    "beforeDevCommand": "npm run start:widget",
+    "devUrl": "http://localhost:4300",
+    "beforeBuildCommand": "npm run build:widget",
+    "frontendDist": "../dist/widget"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "FlipClock",
+        "url": "index.html",
+        "width": 340,
+        "height": 180,
+        "minWidth": 340,
+        "minHeight": 180,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "shadow": false,
+        "center": true,
+        "visible": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Relógio flip e Pomodoro",
+    "longDescription": "Mini widget sempre no topo com relógio flip e Pomodoro configurável.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

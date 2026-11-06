@@ -134,3 +134,46 @@
     right: -18px;
   }
 }
+
+/* Popup da extensão e celulares estreitos: cards compactos para caber em 400px. */
+@media (max-width: 480px) {
+  .clock-container {
+    min-height: calc(100vh - 60px);
+  }
+
+  .time-section {
+    gap: 6px;
+  }
+
+  .flip-unit {
+    margin: 0 2px;
+  }
+
+  .flip-card {
+    width: 62px;
+    height: 92px;
+    font-size: 48px;
+    line-height: 92px;
+    border-radius: 12px;
+    border-width: 2px;
+    letter-spacing: 1px;
+  }
+
+  .flip-unit.small .flip-card {
+    width: 26px;
+    height: 40px;
+    font-size: 18px;
+    line-height: 40px;
+    border-radius: 8px;
+  }
+
+  .time-section .flip-unit:nth-child(2)::after {
+    font-size: 32px;
+    right: -12px;
+  }
+
+  .time-section .flip-unit:nth-child(4)::after {
+    font-size: 20px;
+    right: -10px;
+  }
+}

@@ -26,5 +26,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/focus-sounds/focus-sounds.component').then(m => m.FocusSoundsComponent)
   },
+  {
+    path: 'widget',
+    loadComponent: () =>
+      import('./components/widget/widget.component').then(m => m.WidgetComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

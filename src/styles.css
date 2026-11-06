@@ -19,6 +19,22 @@ body {
   background: #0c0c0c;
 }
 
+/* Extensão do Chrome: o popup precisa de um tamanho fixo. */
+html.host-extension,
+html.host-extension body {
+  width: 460px;
+  height: 600px;
+  min-height: 600px;
+  overflow: auto;
+}
+
+/* Widget desktop (Tauri): a janela é transparente e o card desenha o fundo. */
+html.host-tauri,
+html.host-tauri body {
+  background: transparent;
+  overflow: hidden;
+}
+
 .press-start-2p-regular {
   font-family: 'Press Start 2P', 'system-ui';
   font-weight: 400;

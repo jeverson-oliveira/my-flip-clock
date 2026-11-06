@@ -56,6 +56,81 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "extension": {
+              "outputPath": {
+                "base": "dist/extension",
+                "browser": ""
+              },
+              "baseHref": "./",
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": {
+                  "inline": false
+                }
+              },
+              "extractLicenses": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "10kB"
+                }
+              ],
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public"
+                },
+                {
+                  "glob": "manifest.json",
+                  "input": "extension",
+                  "output": ""
+                }
+              ]
+            },
+            "widget": {
+              "outputPath": {
+                "base": "dist/widget",
+                "browser": ""
+              },
+              "baseHref": "./",
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": {
+                  "inline": false
+                }
+              },
+              "extractLicenses": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "10kB"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -68,6 +143,9 @@
             },
             "development": {
               "buildTarget": "flip-clock:build:development"
+            },
+            "widget": {
+              "buildTarget": "flip-clock:build:widget"
             }
           },
           "defaultConfiguration": "development"

@@ -3,6 +3,8 @@
 # Compiled output
 /dist
 /docs
+/src-tauri/target
+/src-tauri/gen
 /tmp
 /out-tsc
 /bazel-out

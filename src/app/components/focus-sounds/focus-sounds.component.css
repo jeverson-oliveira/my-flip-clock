@@ -70,3 +70,8 @@
 @media (max-width: 900px) {
   .focus-container { padding-left: 16px; padding-top: 80px; }
 }
+
+/* Menu horizontal em telas estreitas: ele já ocupa espaço no layout. */
+@media (max-width: 600px) {
+  .focus-container { padding-top: 16px; }
+}
