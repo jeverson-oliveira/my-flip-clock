@@ -5,6 +5,7 @@ describe('PomodoroService', () => {
   let service: PomodoroService;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({});
     service = TestBed.inject(PomodoroService);
   });
@@ -40,30 +41,128 @@ describe('PomodoroService', () => {
     service.ngOnDestroy();
   }));
 
-  it('should handle milliseconds rollover', fakeAsync(() => {
-    // set to 1 second left, 10ms
-    (service as unknown as { stateSubject: { next: (s: unknown) => void; value: unknown } }).stateSubject.next({
-      mode: 'focus',
-      timeLeft: 5,
-      milliseconds: 0,
-      cycleCount: 0,
-      running: true
-    });
-    service.startPause(); // will clear and set running false, so start again
-    // Force running true and tick
-    (service as unknown as { stateSubject: { next: (s: unknown) => void; value: unknown } }).stateSubject.next({
-      mode: 'focus',
-      timeLeft: 5,
-      milliseconds: 10,
-      cycleCount: 0,
-      running: true
-    });
-    (service as unknown as { intervalId: number }).intervalId = setInterval(() => (service as unknown as { tick: () => void }).tick(), 10) as unknown as number;
-    (service as unknown as { tick: () => void }).tick();
+  it('should compute remaining from wall clock', fakeAsync(() => {
+    service.startPause();
+    tick(1000);
+    expect(service.currentState.timeLeft).toBe(1499);
     expect(service.currentState.milliseconds).toBe(0);
-    clearInterval((service as unknown as { intervalId: number }).intervalId);
     service.ngOnDestroy();
   }));
+
+  it('should keep the timer running when the tab is throttled', fakeAsync(() => {
+    service.startPause();
+    // Simula aba em segundo plano: o intervalo é desacelerado, mas o
+    // tempo restante é calculado pelo relógio, não por decrementos.
+    tick(70000);
+    expect(service.currentState.timeLeft).toBe(1430);
+    service.ngOnDestroy();
+  }));
+
+  it('should resync on visibilitychange', fakeAsync(() => {
+    service.startPause();
+    tick(3000);
+    document.dispatchEvent(new Event('visibilitychange'));
+    expect(service.currentState.timeLeft).toBe(1497);
+    service.ngOnDestroy();
+  }));
+
+  it('should pause preserving the elapsed time', fakeAsync(() => {
+    service.startPause();
+    tick(2000);
+    service.startPause();
+    expect(service.currentState.running).toBeFalse();
+    expect(service.currentState.timeLeft).toBe(1498);
+    service.ngOnDestroy();
+  }));
+
+  it('should not start when there is no time left', () => {
+    (service as unknown as { stateSubject: { next: (s: unknown) => void } }).stateSubject.next({
+      mode: 'focus', timeLeft: 0, milliseconds: 0, cycleCount: 0, running: false
+    });
+    service.startPause();
+    expect(service.currentState.running).toBeFalse();
+  });
+
+  it('should ignore tick when not running', () => {
+    const before = service.currentState;
+    (service as unknown as { tick: () => void }).tick();
+    expect(service.currentState).toEqual(before);
+  });
+
+  it('should persist state on transitions', () => {
+    const stateKey = 'flipclock_pomodoro_state';
+    service.startPause();
+    expect(JSON.parse(localStorage.getItem(stateKey)!).running).toBeTrue();
+    service.startPause();
+    expect(JSON.parse(localStorage.getItem(stateKey)!).running).toBeFalse();
+    service.switchMode('longBreak');
+    expect(JSON.parse(localStorage.getItem(stateKey)!).mode).toBe('longBreak');
+    service.setConfig({ focus: 1200 });
+    expect(JSON.parse(localStorage.getItem(stateKey)!).millisLeft).toBe(1200000);
+  });
+
+  it('should restore a running timer after reload', () => {
+    localStorage.setItem('flipclock_pomodoro_state', JSON.stringify({
+      mode: 'focus', cycleCount: 2, millisLeft: 60000, running: true, savedAt: Date.now()
+    }));
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.running).toBeTrue();
+    expect(svc2.currentState.timeLeft).toBe(60);
+    expect(svc2.currentState.cycleCount).toBe(2);
+    svc2.ngOnDestroy();
+  });
+
+  it('should restore a paused timer after reload', () => {
+    localStorage.setItem('flipclock_pomodoro_state', JSON.stringify({
+      mode: 'shortBreak', cycleCount: 2, millisLeft: 125500, running: false, savedAt: Date.now()
+    }));
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.mode).toBe('shortBreak');
+    expect(svc2.currentState.timeLeft).toBe(125);
+    expect(svc2.currentState.milliseconds).toBe(500);
+    expect(svc2.currentState.running).toBeFalse();
+    svc2.ngOnDestroy();
+  });
+
+  it('should complete a cycle that expired while the page was closed', () => {
+    localStorage.setItem('flipclock_pomodoro_state', JSON.stringify({
+      mode: 'focus', cycleCount: 0, millisLeft: 1000, running: true, savedAt: Date.now() - 5000
+    }));
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.mode).toBe('shortBreak');
+    expect(svc2.currentState.cycleCount).toBe(1);
+    expect(svc2.currentState.running).toBeFalse();
+    svc2.ngOnDestroy();
+  });
+
+  it('should ignore invalid persisted state', () => {
+    localStorage.setItem('flipclock_pomodoro_state', JSON.stringify({ mode: 'nope', millisLeft: 1000 }));
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.mode).toBe('focus');
+    expect(svc2.currentState.timeLeft).toBe(1500);
+    svc2.ngOnDestroy();
+  });
+
+  it('should ignore corrupted persisted state', () => {
+    localStorage.setItem('flipclock_pomodoro_state', 'bad');
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.mode).toBe('focus');
+    svc2.ngOnDestroy();
+  });
+
+  it('should persist on page unload', () => {
+    (service as unknown as { onBeforeUnload: () => void }).onBeforeUnload();
+    expect(localStorage.getItem('flipclock_pomodoro_state')).not.toBeNull();
+  });
+
+  it('should handle state without savedAt', () => {
+    localStorage.setItem('flipclock_pomodoro_state', JSON.stringify({
+      mode: 'focus', millisLeft: 30000, running: false
+    }));
+    const svc2 = new PomodoroService();
+    expect(svc2.currentState.timeLeft).toBe(30);
+    svc2.ngOnDestroy();
+  });
 
   it('should reset to mode duration', () => {
     service.startPause();
